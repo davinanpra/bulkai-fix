@@ -503,19 +503,23 @@ function AIPage(){
   const [input,setInput]=useState("");
   const [loading,setLoading]=useState(false);
   const endRef=useRef();
+  const today=new Date().toDateString();
+const [aiUsage,setAiUsage]=useState(()=>{const u=ls("ai_usage",{date:"",count:0});return u.date===today?u:{date:today,count:0};});
+const limitReached=aiUsage.count>=5;
   useEffect(()=>endRef.current?.scrollIntoView({behavior:"smooth"}),[msgs]);
   useEffect(()=>lsSet("ai_msgs",msgs.slice(-20)),[msgs]);
 
   const SYSTEM=`Kamu adalah AI Personal Trainer dan Nutrition Assistant yang ahli dalam bulking dan fitness. Berbicara dalam bahasa Indonesia yang ramah dan memotivasi. Analisis makanan, estimasi nutrisi, beri saran clean bulking, tips workout. Gunakan emoji. Target harian bulking pemula: Kalori 2500-3000, Protein 120-150g, Karbo 300-350g, Lemak 60-80g. Selalu akhiri dengan motivasi singkat.`;
 
   const send=async()=>{
-    if(!input.trim()||loading) return;
+    if(!input.trim()||loading||limitReached) return;
     const userMsg={role:"user",content:input};
     const newMsgs=[...msgs,userMsg];
     setMsgs(newMsgs);setInput("");setLoading(true);
+    const newUsage={date:today,count:aiUsage.count+1}setAIUsage(newUsage);lsSet("ai_usage",newUsage);
     const reply=await askClaude(newMsgs.map(m=>({role:m.role,content:m.content})),SYSTEM);
     setMsgs(p=>[...p,{role:"assistant",content:reply}]);
-    setLoading(false);
+    setLoading(false
   };
 
   const QUICK=["Analisis makanan saya hari ini","Tips clean bulking pemula","Makanan murah protein tinggi","Workout upper body pemula","Evaluasi progress bulking saya"];
@@ -537,7 +541,7 @@ function AIPage(){
         <div ref={endRef}/>
       </div>
       <div style={{display:"flex",gap:8,marginTop:16,paddingTop:16,borderTop:`1px solid ${C.border}`}}>
-        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&send()} placeholder="Ceritakan makanan atau tanya apapun..." style={{flex:1,padding:"12px 16px",borderRadius:12,border:`1px solid ${C.border}`,background:C.surfaceEl,color:C.text,fontSize:13,outline:"none"}}/>
+        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&send()} placeholder={limitReached?"❌ Limit 5 pertanyaan hari ini. Kembali besok!":"Ceritakan makanan atau tanya apapun..."} style={{flex:1,padding:"12px 16px",borderRadius:12,border:`1px solid ${C.border}`,background:C.surfaceEl,color:C.text,fontSize:13,outline:"none"}}/>
         <button onClick={send} disabled={loading||!input.trim()} style={{padding:"12px 18px",borderRadius:12,border:"none",background:input.trim()?C.accent:C.surfaceEl,color:input.trim()?"#000":C.textMuted,cursor:input.trim()?"pointer":"default",fontWeight:700,fontSize:16,transition:"all 0.2s"}}>↑</button>
       </div>
     </div>
