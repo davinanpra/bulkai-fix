@@ -339,6 +339,7 @@ function WorkoutPage(){
   const [done,setDone]=useState(()=>ls("workout_done",{}));
   const [restTimer,setRestTimer]=useState(0);
   const timerRef=useRef();
+  useEffect(()=>()=>clearInterval(timerRef.current),[]);
 
   useEffect(()=>lsSet("workout_done",done),[done]);
 
@@ -349,8 +350,15 @@ function WorkoutPage(){
   const startRest=(sec=60)=>{
     clearInterval(timerRef.current);
     setRestTimer(sec);
-    timerRef.current=setInterval(()=>setRestTimer(p=>{if(p<=1){clearInterval(timerRef.current);sendNotif("⏱️ Istirahat Selesai!","Lanjutkan set berikutnya!");return 0;}return p-1;}),1000);
-  };
+    timerRef.current=setInterval(()=>setRestTimer(p=>{
+  if(p<=1){
+    clearInterval(timerRef.current);
+    timerRef.current=null;
+    sendNotif("⏱️ Istirahat Selesai!","Lanjutkan set berikutnya!");
+    return 0;
+  }
+  return p-1;
+}),1000);
 
   return(
     <div style={{display:"flex",flexDirection:"column",gap:16}}>
