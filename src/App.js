@@ -19,30 +19,29 @@ const MOTIVASI = [
 
 const WORKOUT_TEMPLATES = {
   upper:[
-    {name:"Push-up",sets:3,reps:"10-15",dur:"20 menit",diff:"Mudah",emoji:"💪"},
-    {name:"Dumbbell Row",sets:3,reps:"10-12",dur:"20 menit",diff:"Sedang",emoji:"🏋️"},
-    {name:"Shoulder Press",sets:3,reps:"10-12",dur:"15 menit",diff:"Sedang",emoji:"🔝"},
-    {name:"Bicep Curl",sets:3,reps:"12-15",dur:"15 menit",diff:"Mudah",emoji:"💪"},
+    {id:"pushup",name:"Push-up",sets:3,reps:"10-15",dur:"20 menit",diff:"Mudah",emoji:"💪"},
+    {id:"dumbbell_row",name:"Dumbbell Row",sets:3,reps:"10-12",dur:"20 menit",diff:"Sedang",emoji:"🏋️"},
+    {id:"shoulder_press",name:"Shoulder Press",sets:3,reps:"10-12",dur:"15 menit",diff:"Sedang",emoji:"🔝"},
+    {id:"bicep_curl",name:"Bicep Curl",sets:3,reps:"12-15",dur:"15 menit",diff:"Mudah",emoji:"💪"},
   ],
   lower:[
-    {name:"Squat",sets:3,reps:"12-15",dur:"20 menit",diff:"Sedang",emoji:"🦵"},
-    {name:"Lunges",sets:3,reps:"10/kaki",dur:"15 menit",diff:"Mudah",emoji:"🚶"},
-    {name:"Calf Raise",sets:3,reps:"15-20",dur:"10 menit",diff:"Mudah",emoji:"🦶"},
-    {name:"Glute Bridge",sets:3,reps:"15",dur:"10 menit",diff:"Mudah",emoji:"🍑"},
+    {id:"squat",name:"Squat",sets:3,reps:"12-15",dur:"20 menit",diff:"Sedang",emoji:"🦵"},
+    {id:"lunges",name:"Lunges",sets:3,reps:"10/kaki",dur:"15 menit",diff:"Mudah",emoji:"🚶"},
+    {id:"calf_raise",name:"Calf Raise",sets:3,reps:"15-20",dur:"10 menit",diff:"Mudah",emoji:"🦶"},
+    {id:"glute_bridge",name:"Glute Bridge",sets:3,reps:"15",dur:"10 menit",diff:"Mudah",emoji:"🍑"},
   ],
   fullbody:[
-    {name:"Burpee",sets:3,reps:"8-10",dur:"20 menit",diff:"Berat",emoji:"🔥"},
-    {name:"Mountain Climber",sets:3,reps:"20",dur:"15 menit",diff:"Sedang",emoji:"⛰️"},
-    {name:"Plank",sets:3,reps:"30-60 dtk",dur:"10 menit",diff:"Sedang",emoji:"🧱"},
-    {name:"Jump Squat",sets:3,reps:"10-12",dur:"15 menit",diff:"Berat",emoji:"⬆️"},
+    {id:"burpee",name:"Burpee",sets:3,reps:"8-10",dur:"20 menit",diff:"Berat",emoji:"🔥"},
+    {id:"mountain_climber",name:"Mountain Climber",sets:3,reps:"20",dur:"15 menit",diff:"Sedang",emoji:"⛰️"},
+    {id:"plank",name:"Plank",sets:3,reps:"30-60 dtk",dur:"10 menit",diff:"Sedang",emoji:"🧱"},
+    {id:"jump_squat",name:"Jump Squat",sets:3,reps:"10-12",dur:"15 menit",diff:"Berat",emoji:"⬆️"},
   ],
   rest:[
-    {name:"Stretching",sets:1,reps:"10 menit",dur:"10 menit",diff:"Mudah",emoji:"🧘"},
-    {name:"Foam Rolling",sets:1,reps:"10 menit",dur:"10 menit",diff:"Mudah",emoji:"🟫"},
-    {name:"Jalan Santai",sets:1,reps:"20-30 menit",dur:"30 menit",diff:"Mudah",emoji:"🚶"},
+    {id:"stretching",name:"Stretching",sets:1,reps:"10 menit",dur:"10 menit",diff:"Mudah",emoji:"🧘"},
+    {id:"foam_rolling",name:"Foam Rolling",sets:1,reps:"10 menit",dur:"10 menit",diff:"Mudah",emoji:"🟫"},
+    {id:"jalan_santai",name:"Jalan Santai",sets:1,reps:"20-30 menit",dur:"30 menit",diff:"Mudah",emoji:"🚶"},
   ],
 };
-
 const CARDIO_TYPES = [
   {id:"run",name:"Lari",emoji:"🏃",met:9},
   {id:"jog",name:"Jogging",emoji:"🏃‍♂️",met:7},
@@ -376,7 +375,7 @@ function WorkoutPage(){
         <button onClick={()=>{clearInterval(timerRef.current);setRestTimer(0);}} style={{marginTop:8,padding:"6px 16px",borderRadius:8,border:`1px solid ${C.orange}`,background:"transparent",color:C.orange,cursor:"pointer",fontWeight:700,fontSize:12}}>Skip</button>
       </Card>}
       {workouts.map((w,i)=>{
-        const key=`${tab}-${i}`,isDone=done[key];
+        const key=w.id,isDone=done[key];
         return<Card key={i} style={{border:`1px solid ${isDone?C.accent+"55":C.border}`,background:isDone?C.accent+"08":C.surface}}>
           <div style={{display:"flex",gap:14,alignItems:"flex-start"}}>
             <div style={{fontSize:28}}>{w.emoji}</div>
