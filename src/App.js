@@ -112,9 +112,23 @@ async function askClaude(messages, system) {
 }
 
 function ls(key, fallback) {
-  try { const v=localStorage.getItem(key); return v?JSON.parse(v):fallback; } catch { return fallback; }
+  try {
+    const v = localStorage.getItem(key);
+    if (v === null || v === undefined) return fallback;
+    const parsed = JSON.parse(v);
+    return parsed ?? fallback;
+  } catch {
+    localStorage.removeItem(key);
+    return fallback;
+  }
 }
-function lsSet(key, val) { try { localStorage.setItem(key,JSON.stringify(val)); } catch {} }
+function lsSet(key, val) {
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch (e) {
+    console.warn("Storage penuh atau error:", e);
+  }
+}
 
 function calcBMI(bb,tb) { if(!bb||!tb) return 0; return (bb/((tb/100)**2)).toFixed(1); }
 function calcBMR(bb,tb,age,gender) {
